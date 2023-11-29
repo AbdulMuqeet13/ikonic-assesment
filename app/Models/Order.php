@@ -27,6 +27,7 @@ class Order extends Model
         'commission_owed',
         'payout_status',
         'customer_email',
+        'external_order_id',
         'created_at'
     ];
 
@@ -38,5 +39,20 @@ class Order extends Model
     public function affiliate()
     {
         return $this->belongsTo(Affiliate::class);
+    }
+
+    public static function createOrder(array $data): Model|\Illuminate\Database\Eloquent\Builder
+    {
+        return self::query()->create($data);
+    }
+
+    public static function getOrdersInDateRange(string $from, string $to): \Illuminate\Database\Eloquent\Collection|array
+    {
+        return self::query()->whereBetween('created_at', [$from, $to])->get();
+    }
+
+    public function updateOrderPayoutStatus(string $status): int
+    {
+        return self::query()->update(['payout_status' => $status]);
     }
 }

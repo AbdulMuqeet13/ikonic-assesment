@@ -67,4 +67,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(Affiliate::class);
     }
+
+    public static function createUser(array $data)
+    {
+        return self::query()->create($data);
+    }
+
+    public static function getUserByEmail(string $email): \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Builder|null
+    {
+        return self::query()->with('merchant')->where('email', $email)->first();
+    }
 }
